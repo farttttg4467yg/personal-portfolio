@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Personal Site • Scientific Calculator (HTML+CSS)</title>
+  <style>
+    :root{
+      --bg: #0f172a;        /* slate-900 */
+      --panel: #111827;     /* gray-900 */
+      --panel-2:#0b1220;    /* deep panel */
+      --muted:#94a3b8;      /* slate-400 */
+      --text:#e5e7eb;       /* gray-200 */
+      --accent:#22d3ee;     /* cyan-400 */
+      --accent-2:#a78bfa;   /* violet-400 */
+      --btn:#1f2937;        /* gray-800 */
+      --btn-hi:#374151;     /* gray-700 */
+      --danger:#ef4444;     /* red-500 */
+      --ok:#10b981;         /* emerald-500 */
+      --shadow: 0 20px 60px rgba(0,0,0,.5);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at -10% -10%, #0ea5e960 0%, transparent 60%),
+        radial-gradient(1000px 500px at 110% 10%, #8b5cf660 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg), #020617 70%);
+      display:flex; align-items:center; justify-content:center; padding:24px;
+    }
+
+    .site{
+      width:min(1100px, 100%);
+      display:grid; gap:22px;
+      grid-template-columns: 1.1fr 1fr;
+    }
+    @media (max-width: 900px){
+      .site{grid-template-columns: 1fr}
+    }
+
+    .card{
+      background:linear-gradient(180deg, var(--panel), var(--panel-2));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,.06);
+      overflow:hidden;
+    }
+    .pad{padding:22px}
+
+    /* Profile / About */
+    .hero{
+      display:grid; grid-template-columns: 96px 1fr; gap:16px; align-items:center;
+    }
+    .avatar{
+      width:96px; height:96px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #22d3ee, #a78bfa);
+      filter: saturate(1.2);
+      box-shadow: 0 10px 30px rgba(34,211,238,.35);
+    }
+    h1{margin:0; font-size: clamp(24px, 2.6vw, 38px); letter-spacing:.2px}
+    .muted{color:var(--muted)}
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+    .chip{
+      padding:8px 12px; border-radius:999px; background:#0b1220; border:1px solid rgba(255,255,255,.08);
+      font-size:14px; color:#cbd5e1;
+    }
+    a.btn{
+      display:inline-flex; gap:8px; align-items:center; text-decoration:none;
+      padding:10px 14px; border-radius:12px; background:var(--btn);
+      border:1px solid rgba(255,255,255,.08); color:#e5e7eb; transition: .2s;
+    }
+    a.btn:hover{background:var(--btn-hi); transform: translateY(-1px)}
+
+    /* Calculator */
+    .calc{
+      display:grid; grid-template-rows: auto 1fr;
+    }
+    .screen{
+      padding:18px 18px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, #0b1220, #0d1323);
+    }
+    .display{
+      width:100%; height:64px; border:none; outline:none;
+      background:#020617; color:#e5e7eb; font-size:28px; padding:14px 16px;
+      border-radius:12px; letter-spacing:.5px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .keypad{
+      padding:16px;
+      display:grid;
+      gap:10px;
+      grid-template-columns: repeat(6, 1fr);
+    }
+    button.key{
+      appearance:none; -webkit-appearance:none;
+      border:none; outline:none; cursor:pointer;
+      padding:14px 10px; border-radius:12px;
+      background:var(--btn); color:#e5e7eb;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+      font-size:16px; line-height:1; transition: transform .02s ease, background .15s ease;
+      user-select:none;
+    }
+    button.key:active{transform: translateY(1px)}
+    .op{background: linear-gradient(180deg, #0f1b2f, #0c1530)}
+    .fn{background: linear-gradient(180deg, #061826, #0a1d33); color:#cfe9ff}
+    .accent{background: linear-gradient(180deg, #0b3b45, #0a2a30); box-shadow: inset 0 0 0 1px rgba(34,211,238,.35)}
+    .violet{background: linear-gradient(180deg, #271a49, #1e1639); box-shadow: inset 0 0 0 1px rgba(167,139,250,.35)}
+    .danger{background: linear-gradient(180deg, #3b0f14, #2b0c10); color:#fecaca; box-shadow: inset 0 0 0 1px rgba(239,68,68,.45)}
+    .ok{background: linear-gradient(180deg, #0b2b1f, #0b2019); color:#d1fae5; box-shadow: inset 0 0 0 1px rgba(16,185,129,.45)}
+    .wide{grid-column: span 2}
+    .tall{grid-row: span 2}
+    .sp-3{grid-column: span 3}
+    .sp-6{grid-column: span 6}
+
+    /* Footer */
+    .footer{
+      display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+      padding:14px 18px; border-top:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, #0d1323, #0c1220);
+      font-size:14px;
+    }
+    .note{color:#9ca3af}
+  </style>
+</head>
+<body>
+
+  <main class="site">
+    <!-- Left: About / Links -->
+    <section class="card pad">
+      <div class="hero">
+        <div class="avatar" aria-hidden="true"></div>
+        <div>
+          <h1>Hey, I’m <span style="color:var(--accent)">[Your Name]</span></h1>
+          <p class="muted">Welcome to my personal website. I built a sleek scientific calculator UI using only HTML & CSS.</p>
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="row">
+        <span class="chip">Student • Maker</span>
+        <span class="chip">Web • UI/UX</span>
+        <span class="chip">Math • Physics</span>
+      </div>
+
+      <div style="height:16px"></div>
+
+      <div class="row">
+        <a class="btn" href="mailto:you@example.com" aria-label="Email me">
+          ✉️ Email
+        </a>
+        <a class="btn" href="#" aria-label="My GitHub">
+          🌐 GitHub
+        </a>
+        <a class="btn" href="#" aria-label="My LinkedIn">
+          💼 LinkedIn
+        </a>
+      </div>
+    </section>
+
+    <!-- Right: Calculator -->
+    <section class="card calc" aria-labelledby="calc-title">
+      <div class="screen">
+        <h2 id="calc-title" style="margin:0 0 10px; font-size:18px; color:#cbd5e1">Scientific Calculator (UI Only)</h2>
+        <input class="display" type="text" inputmode="numeric" placeholder="0" aria-label="Calculator display (not interactive without JavaScript)">
+      </div>
+
+      <div class="keypad" aria-hidden="true">
+        <!-- Row: functions -->
+        <button class="key fn">2nd</button>
+        <button class="key fn">deg</button>
+        <button class="key fn">hyp</button>
+        <button class="key fn">sin</button>
+        <button class="key fn">cos</button>
+        <button class="key fn">tan</button>
+
+        <!-- Row -->
+        <button class="key fn">ln</button>
+        <button class="key fn">log</button>
+        <button class="key fn">eˣ</button>
+        <button class="key fn">x²</button>
+        <button class="key fn">xʸ</button>
+        <button class="key fn">√</button>
+
+        <!-- Row -->
+        <button class="key fn">π</button>
+        <button class="key fn">e</button>
+        <button class="key fn">|x|</button>
+        <button class="key fn">(</button>
+        <button class="key fn">)</button>
+        <button class="key danger">AC</button>
+
+        <!-- Digits / ops -->
+        <button class="key">7</button>
+        <button class="key">8</button>
+        <button class="key">9</button>
+        <button class="key op">÷</button>
+        <button class="key op">mod</button>
+        <button class="key op">x!</button>
+
+        <button class="key">4</button>
+        <button class="key">5</button>
+        <button class="key">6</button>
+        <button class="key op">×</button>
+        <button class="key op">%</button>
+        <button class="key op">1/x</button>
+
+        <button class="key">1</button>
+        <button class="key">2</button>
+        <button class="key">3</button>
+        <button class="key op">−</button>
+        <button class="key op">ANS</button>
+        <button class="key op">EXP</button>
+
+        <button class="key sp-3">0</button>
+        <button class="key">.</button>
+        <button class="key op">+</button>
+        <button class="key ok">=</button>
+      </div>
+
+      <div class="footer">
+        <span class="note">UI built with pure HTML + CSS. Add JavaScript to make it calculate.</span>
+        <span class="note">Tip: keep the keypad layout in a CSS grid for easy upgrades.</span>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
