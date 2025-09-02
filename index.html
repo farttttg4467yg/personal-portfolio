@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itachi Uchiha - Anime Interface</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="title">Itachi Uchiha</div>
+    <div class="subtitle">"Those who turn their hands against comrades are sure to die a terrible death."</div>
+    <button class="btn" onclick="playMusic()">Enter the Ninja World</button>
+  </div>
+
+  <!-- Sharingan floating -->
+  <div class="sharingan" style="left:20%; animation-delay: 0s;"></div>
+  <div class="sharingan" style="left:50%; animation-delay: 4s;"></div>
+  <div class="sharingan" style="left:80%; animation-delay: 8s;"></div>
+
+  <!-- Crows flying -->
+  <div class="crow" style="top:30%; animation-delay: 0s;"></div>
+  <div class="crow" style="top:50%; animation-delay: 5s;"></div>
+
+  <!-- Background Music -->
+  <audio id="bg-music" autoplay loop muted>
+    <source src="https://files.catbox.moe/2ayp5o.mp3" type="audio/mp3">
+  </audio>
+
+  <script>
+    function playMusic() {
+      const music = document.getElementById("bg-music");
+      music.muted = false; // unmute
+      music.play();
+    }
+  </script>
+</body>
+</html>
